@@ -19,14 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Main.cpp" />
-    <ClCompile Include="..\Object.cpp" />
+    <ClCompile Include="..\..\Main.cpp" />
+    <ClCompile Include="..\..\Object.cpp" />
+    <ClCompile Include="..\..\Simulation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\DynamicObject.h" />
-    <ClInclude Include="..\Object.h" />
-    <ClInclude Include="..\ResourceManager.h" />
-    <ClInclude Include="..\StaticObject.h" />
+    <ClInclude Include="..\..\DynamicObject.h" />
+    <ClInclude Include="..\..\Menu.h" />
+    <ClInclude Include="..\..\Object.h" />
+    <ClInclude Include="..\..\ResourceManager.h" />
+    <ClInclude Include="..\..\Simulation.h" />
+    <ClInclude Include="..\..\StaticObject.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{348ACFCE-08C1-49CE-877E-4413CE9731E3}</ProjectGuid>

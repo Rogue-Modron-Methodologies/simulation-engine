@@ -31,13 +31,13 @@ void Object::update()
 		done = true;
 		body->SetActive(false);
 		sprite->setColor(sf::Color(r, g, b, 0));
-
 		}
 		else if (active && !done && totVel > 5)
 		{
 		sprite->setColor(sf::Color(r, g, b, totVel * 4 % 255));
 
-		}*/
+		}
+		*/
 	}
 	sprite->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
 	sprite->setRotation(180 / b2_pi * body->GetAngle());

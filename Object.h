@@ -9,8 +9,7 @@
 // pixel to real-world conversion
 static const float SCALE = 30.f;
 
-class Object
-{
+class Object {
 protected:
 	b2Body* body;
 	sf::Sprite* sprite;

@@ -3,16 +3,10 @@
 
 #include "Object.h"
 
-
 class StaticObject : public Object
 {
 public:
-	StaticObject(b2World& world, b2BodyDef &bDef, b2FixtureDef &fDef, const sf::Texture &text);
-};
-#endif // STATIC_OBJECT_H
-
-StaticObject::StaticObject(b2World& world, b2BodyDef &bDef, b2FixtureDef &fDef, const sf::Texture &text)
-{
+	StaticObject(b2World& world, b2BodyDef &bDef, b2FixtureDef &fDef, const sf::Texture &text) {
 	active = false;
 	done = false;
 	isForceActive = false;
@@ -22,5 +16,6 @@ StaticObject::StaticObject(b2World& world, b2BodyDef &bDef, b2FixtureDef &fDef, 
 	sprite = new sf::Sprite(text);
 	sprite->setOrigin(sprite->getLocalBounds().width / 2.f, sprite->getLocalBounds().height / 2.f);
 	r = g = b = 255;
-	
 }
+};
+#endif // STATIC_OBJECT_
