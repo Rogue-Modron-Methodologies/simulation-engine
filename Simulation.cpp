@@ -11,43 +11,83 @@ Simulation::Simulation() : txtMngr(), menu(), world(DGRAVITY)
 Simulation::~Simulation() {};
 
 void Simulation::run() {
-	while (loadMainMenu()) {
-		loadSimulation();
+	int userChoice;
+	while (userChoice = loadMainMenu()) {
+		switch (userChoice) {
+		case 1:
+			loadSimulation();
+		default:
+			break;
+		}	
 	}
 }
 
-bool Simulation::loadMainMenu() {
-	int userChoice = menu.MainMenu();
-	int option;
-	switch (userChoice) {
-	case 1:
-		return true;
-	case 2:
+int Simulation::loadMainMenu() {
+	switch (menu.displayMenu(MAIN_MENU)) {
+	case 1: // Run with current options
+		return 1;
+	case 2: // View current options
 		std::cout << "View Current Options HERE\n";
 		break;
-	case 3:
-		option = menu.currentOptionMenu();
-		changeSimulationOptions(option);
+	case 3: // Change current options
+		changeOptions();
 		break;
-	case 4:
+	case 4: // Randomize Options
 		std::cout << "RANDOMIZE OPTIONS HERE\n";
-		return true;
-	case 5:
-		return false;
+		return 1;
+	case 5: // Exit
+		return 0;
 	}
-	return true;
+	return 2;
+}
+
+void Simulation::changeOptions() {
+	int option;
+	switch (menu.displayMenu(CURRENT_OPTION_MENU)) {
+	case 1: // Simulation Options
+		option = menu.displayMenu(SIMULATION_OPTION_MENU);
+		break;
+	case 2: // World Options
+		option = menu.displayMenu(WORLD_OPTION_MENU);
+		changeWorldOptions(option);
+		break;
+	case 3: // Object Options
+		option = menu.displayMenu(OBJECT_OPTION_MENU);
+		changeObjectOptions(option);
+		break;
+	default: // Exit 
+		break;
+	}
 }
 
 void Simulation::changeSimulationOptions(int userChoice) {
 	switch (userChoice) {
-	case 1:
-		menu.setParams(-DBL_MAX, DBL_MAX, "Enter Gravity (two doubles)");
-		b2Vec2 gravity = b2Vec2((float32)menu.getParam1(), (float32)menu.getParam2());
-		world.SetGravity(gravity);
+	case 1: // Mouse Click Options
+		std::cout << "Color Mouse Here\n";
 		break;
-		//default:
-		//	std::cout << "Rerunning Simulation with current options\n";
-		//	break;
+	default:
+		break;
+	}
+}
+
+void Simulation::changeWorldOptions(int userChoice) {
+	switch (userChoice) {
+	case 1: // Gravity
+		menu.setParams(-DBL_MAX, DBL_MAX, "Enter Gravity (Horizontal & Vertical)");
+		world.SetGravity(b2Vec2((float32)menu.getParam1(), (float32)menu.getParam2()));
+		break;
+	default:
+		break;
+	}
+}
+
+void Simulation::changeObjectOptions(int userChoice) {
+	switch (userChoice) {
+	case 1: // Color
+		std::cout << "Color Options Here\n";
+		break;
+	default:
+		break;
 	}
 }
 

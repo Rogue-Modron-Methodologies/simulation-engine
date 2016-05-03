@@ -4,7 +4,9 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <vector>
 #include <Box2D\Box2D.h>
+#include "ConsoleColor.h"
 
 class Menu
 {
@@ -12,44 +14,29 @@ class Menu
 	double param2;
 
 public:
-	int MainMenu() 	{
-		std::cout << "Simulation Options\n";
-		std::cout << "1) Run with current options. \n";
-		std::cout << "2) View current options. \n";
-		std::cout << "3) Change current options. \n";
-		std::cout << "4) Randomize Options. \n";
-		std::cout << "5) Exit.\n";
-		return getValidInput(1, 5);
+	int displayMenu(std::vector<std::string> prompts) 	{	
+		unsigned int i = 0;
+		for ( ; i < prompts.size(); ++i)
+			std::cout << i + 1 << ") "<< prompts[i] << std::endl;
+		std::cout << i + 1 << ") Exit\n";
+		return getValidInput(1, (int)prompts.size() + 1);
 	}
-
-	int currentOptionMenu() {
-		std::cout << "Options Menu\n";
-		std::cout << "1) Gravity Options\n";
-		//std::cout << "2) \n";
-		//std::cout << "3) \n";
-		//std::cout << "4) \n";
-		//std::cout << "5) \n";
-		//std::cout << "6) \n";
-		//std::cout << "7) \n";
-		//std::cout << "8) \n";
-		std::cout << "2) Exit with no changes. \n";
-		return getValidInput(1, 2);	
-	}
-
-	// get a pair of valid parameters
-	template <class T>
+	double getParam1() { return param1; }
+	double getParam2() { return param2; }
+	template <class T>	// get a pair of valid parameters
 	void setParams(T low, T high, std::string prompt = "") {
-		if (prompt.length() > 0) std::cout << prompt << std::endl;
+		if (prompt.length() > 0) 
+			std::cout << prompt << std::endl;
 		param1 = getValidInput(low, high);
+		if (prompt.length() > 0) 
+			std::cout << prompt << std::endl;
 		param2 = getValidInput(low, high);
 	}
 
-	double getParam1() { return param1; }
-
-	double getParam2() { return param2; }
-
 private:
-	// Validate Input
+	void clearScreen() {	
+		std::cout << "\x1B[2J\x1B[H";  // CSI[2J clears screen, CSI[H moves the cursor to top-left corner
+	}
 	template <class T>
 	T getValidInput(T low, T high)
 	{
@@ -67,7 +54,7 @@ private:
 			else
 				validInput = true;
 		} while (!validInput);
-
+		clearScreen();
 		return temp;
 	}
 };

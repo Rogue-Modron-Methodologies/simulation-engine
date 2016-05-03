@@ -54,7 +54,6 @@ const T& ResourceManager<T>::getResource(const std::string &filename)
 	return resources[filename];
 }
 
-
 template <class T>
 void ResourceManager<T>::unloadResource(const T &resource)
 {
