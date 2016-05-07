@@ -44,5 +44,8 @@
     <ClInclude Include="..\..\StaticObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ConsoleMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

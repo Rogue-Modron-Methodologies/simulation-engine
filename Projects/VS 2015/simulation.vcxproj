@@ -24,6 +24,7 @@
     <ClCompile Include="..\..\Simulation.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ConsoleMenu.h" />
     <ClInclude Include="..\..\DynamicObject.h" />
     <ClInclude Include="..\..\Menu.h" />
     <ClInclude Include="..\..\Object.h" />

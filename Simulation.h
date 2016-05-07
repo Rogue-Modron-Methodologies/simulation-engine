@@ -4,7 +4,7 @@
 #include "StaticObject.h"
 #include "DynamicObject.h"
 #include "ResourceManager.h"
-#include "Menu.h"
+#include "ConsoleMenu.h"
 #include <vector>
 #include <stdlib.h>
 #include <ctime>
@@ -20,7 +20,7 @@ const std::vector<string> CURRENT_OPTION_MENU = {
 	"Object Options" };
 
 const std::vector<string> SIMULATION_OPTION_MENU = {
-	"Mouse Click Options" };
+	"Simulation Name" };
 
 const std::vector<string> WORLD_OPTION_MENU = {
 	"Gravity Option" };
@@ -36,9 +36,11 @@ const std::string WALL = "wall.png";
 class Simulation {
 
 	ResourceManager<sf::Texture> txtMngr;
+	sf::RenderWindow *window;
 	std::vector<Object> objectList;
 	b2World world;
-	Menu menu;
+	ConsoleMenu menu;
+	std::string name;
 
 public:
 	Simulation();

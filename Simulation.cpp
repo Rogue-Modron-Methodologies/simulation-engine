@@ -6,6 +6,7 @@ Simulation::Simulation() : txtMngr(), menu(), world(DGRAVITY)
 	txtMngr.getResource("box.png");
 	txtMngr.getResource("ground.png");
 	txtMngr.getResource("wall.png");
+	name = "Simulation";
 }
 
 Simulation::~Simulation() {};
@@ -46,6 +47,7 @@ void Simulation::changeOptions() {
 	switch (menu.displayMenu(CURRENT_OPTION_MENU)) {
 	case 1: // Simulation Options
 		option = menu.displayMenu(SIMULATION_OPTION_MENU);
+		changeSimulationOptions(option);
 		break;
 	case 2: // World Options
 		option = menu.displayMenu(WORLD_OPTION_MENU);
@@ -62,8 +64,9 @@ void Simulation::changeOptions() {
 
 void Simulation::changeSimulationOptions(int userChoice) {
 	switch (userChoice) {
-	case 1: // Mouse Click Options
-		std::cout << "Color Mouse Here\n";
+	case 1: // Simuation Name
+		menu.setStringInput("Simulation Name");
+		name = menu.getString();
 		break;
 	default:
 		break;
@@ -92,8 +95,8 @@ void Simulation::changeObjectOptions(int userChoice) {
 }
 
 void Simulation::loadSimulation() {
-	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Simulation");
-	window.setFramerateLimit(60);
+	window = new sf::RenderWindow(sf::VideoMode(1000, 1000), name);
+	window->setFramerateLimit(60);
 
 	b2PolygonShape shape;
 	shape.SetAsBox((1000.f / 2) / SCALE, (100.f / 2) / SCALE);
@@ -132,30 +135,30 @@ void Simulation::loadSimulation() {
 	{
 		randx = rand() % 200 - 100;
 		randy = rand() % 200 - 100;
-		bodyDef.position = b2Vec2(rand() % window.getSize().x / SCALE, rand() % window.getSize().y / SCALE);
+		bodyDef.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
 		shape.SetAsBox((32.f / 2) / SCALE, (32.f / 2) / SCALE);
 		objectList.push_back(DynamicObject(world, bodyDef, boxFixtureDef, txtMngr.getResource(BOX)));
 		objectList.back().applyForce(b2Vec2(float32(randx), float32(randy)), 100);
 	}
 
-	while (window.isOpen() && randBoxes > 0)
+	while (window->isOpen() && randBoxes > 0)
 	{
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();
+				window->close();
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Escape)
-					window.close();
+					window->close();
 			}
 			if (event.type == sf::Event::MouseButtonPressed)
 			{
 				if (event.mouseButton.button == sf::Mouse::Right)
 				{
-					int mouseX = sf::Mouse::getPosition(window).x;
-					int mouseY = sf::Mouse::getPosition(window).y;
+					int mouseX = sf::Mouse::getPosition(*window).x;
+					int mouseY = sf::Mouse::getPosition(*window).y;
 
 					bodyDef.position = b2Vec2(mouseX / SCALE, mouseY / SCALE);
 					shape.SetAsBox((32.f / 2) / SCALE, (32.f / 2) / SCALE);
@@ -167,7 +170,7 @@ void Simulation::loadSimulation() {
 					for (std::vector<Object>::iterator it = objectList.begin(); it != objectList.end(); ++it)
 					{
 
-						if (it->isTargeted(window))
+						if (it->isTargeted(*window))
 						{
 							int randx = rand() % 200 - 100;
 							int randy = rand() % 200 - 100;
@@ -186,14 +189,14 @@ void Simulation::loadSimulation() {
 
 		world.Step(1 / 60.f, 8, 3);
 
-		window.clear(sf::Color::White);
+		window->clear(sf::Color::White);
 
 		for (std::vector<Object>::iterator it = objectList.begin(); it != objectList.end(); ++it)
 		{
 			it->update();
-			it->draw(window);
+			it->draw(*window);
 		}
-		window.display();
+		window->display();
 	}
 
 	for (std::vector<Object>::iterator it = objectList.begin(); it != objectList.end(); ++it)
@@ -201,4 +204,6 @@ void Simulation::loadSimulation() {
 		it->destroy(world);
 	}
 	objectList.clear();
+
+	delete window;
 }
