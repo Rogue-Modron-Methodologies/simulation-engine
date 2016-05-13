@@ -18,16 +18,12 @@ const std::vector<string> CURRENT_OPTION_MENU = {
 	"Simulation Options",
 	"World Options",
 	"Object Options" };
-
 const std::vector<string> SIMULATION_OPTION_MENU = {
 	"Simulation Name" };
-
 const std::vector<string> WORLD_OPTION_MENU = {
 	"Gravity Option" };
-
 const std::vector<string> OBJECT_OPTION_MENU = {
 	"Color Options" };
-
 const b2Vec2 DGRAVITY(0.f, 10.f);
 const std::string BOX = "box.png";
 const std::string GROUND = "ground.png";
@@ -49,6 +45,8 @@ public:
 
 private:
 	void loadSimulation();
+	void loadRandomSimulation();
+	void runSimulation();
 	int loadMainMenu();
 	void changeOptions(); 
 	void changeSimulationOptions(int userChoice);

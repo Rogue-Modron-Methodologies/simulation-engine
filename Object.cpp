@@ -13,7 +13,6 @@ void Object::update()
 		unsigned yVel = abs((int)body->GetLinearVelocity().y);
 		unsigned rotVel = abs((int)body->GetAngularVelocity());
 		unsigned totVel = xVel + yVel + rotVel;
-		sprite->setColor(sf::Color(sf::Color::Green));
 		/*if (!active && !done && totVel == 0)
 		{
 		std::cout << "INactive!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
@@ -30,7 +29,6 @@ void Object::update()
 		active = false;
 		done = true;
 		body->SetActive(false);
-		sprite->setColor(sf::Color(r, g, b, 0));
 		}
 		else if (active && !done && totVel > 5)
 		{

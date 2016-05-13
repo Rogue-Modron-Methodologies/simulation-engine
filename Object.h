@@ -15,16 +15,25 @@ protected:
 	bool isForceActive;
 	b2Vec2 activeForce;
 	int forceDuration;
-	int r, g, b;
 	bool active;
 	bool done;
 
 public:
+	Object(const sf::Texture &text)
+	{
+		active = false;
+		done = false;
+		isForceActive = false;
+		sprite = new sf::Sprite(text);
+		sprite->setOrigin(sprite->getLocalBounds().width / 2.f, sprite->getLocalBounds().height / 2.f);
+	}
 	virtual void update(); 
 	virtual void draw(sf::RenderWindow &window);
 	void applyForce(b2Vec2 force, int duration);	
 	bool isTargeted(sf::RenderWindow &window);
 	void destroy(b2World& world);
+	void setColor(sf::Color c = sf::Color::Transparent) { sprite->setColor(c); }
+	static sf::Color randColor() { return sf::Color(rand() % 255, rand() % 255, rand() % 255); }
 
 private:
 	sf::Vector2f convertCoord(sf::RenderWindow &window);
