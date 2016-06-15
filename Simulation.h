@@ -23,20 +23,33 @@ const std::vector<string> SIMULATION_OPTION_MENU = {
 const std::vector<string> WORLD_OPTION_MENU = {
 	"Gravity Option" };
 const std::vector<string> OBJECT_OPTION_MENU = {
+	"Number Options", 
 	"Color Options" };
+const std::vector<string> COLOR_LIST = {
+	"Red",
+	"Green",
+	"Blue"
+};
 const b2Vec2 DGRAVITY(0.f, 10.f);
 const std::string BOX = "box.png";
 const std::string GROUND = "ground.png";
 const std::string WALL = "wall.png";
+
+struct Options {
+	std::string name;
+	b2Vec2 cGravity;
+	int numObjects;
+	sf::Color color;
+};
 
 class Simulation {
 
 	ResourceManager<sf::Texture> txtMngr;
 	sf::RenderWindow *window;
 	std::vector<Object> objectList;
+	Options cOptions;
 	b2World world;
 	ConsoleMenu menu;
-	std::string name;
 
 public:
 	Simulation();
@@ -44,13 +57,16 @@ public:
 	void run();
 
 private:
-	void loadSimulation();
-	void loadRandomSimulation();
 	void runSimulation();
+	void loadSimulation();
+	void randomizeOptions();
+	void loadEnviornment();
+	void loadObjectList();
 	int loadMainMenu();
 	void changeOptions(); 
 	void changeSimulationOptions(int userChoice);
 	void changeWorldOptions(int userChoice);
 	void changeObjectOptions(int userChoice);
+	void displayCurrentOptions();
 }; 
 #endif // SIMULATION_H

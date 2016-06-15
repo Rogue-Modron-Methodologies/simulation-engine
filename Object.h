@@ -8,6 +8,12 @@
 // pixel to real-world conversion
 static const float SCALE = 30.f;
 
+// force structure/class
+// b2Vec2 force
+// double duration
+// bool active
+// updateForces()
+
 class Object {
 protected:
 	b2Body* body;

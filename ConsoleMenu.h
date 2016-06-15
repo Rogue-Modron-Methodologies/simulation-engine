@@ -17,6 +17,7 @@ public:
 		return getValidInput(1, (int)prompts.size() + 1);
 	}
 
+
 	template <class T>	// get a pair of valid parameters
 	void setParams(T low, T high, std::string prompt = "") {
 		cin.ignore();
