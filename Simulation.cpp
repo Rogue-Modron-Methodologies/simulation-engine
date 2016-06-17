@@ -150,9 +150,9 @@ void Simulation::loadEnviornment() {
 	shape.SetAsBox((1000.f / 2) / SCALE, (100.f / 2) / SCALE);
 	b2FixtureDef groundFixtureDef;
 	groundFixtureDef.density = 0.f;
-	groundFixtureDef.friction = 0.7f;
+	groundFixtureDef.friction = 0.5f;
 	groundFixtureDef.shape = &shape;
-	groundFixtureDef.restitution = 1;
+	groundFixtureDef.restitution = 0.5f;
 
 	b2BodyDef bodyDef;
 	bodyDef.position = b2Vec2(500.f / SCALE, 1000.f / SCALE);

@@ -37,14 +37,15 @@ void Object::update()
 		}
 		*/
 	}
-	sprite->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
-	sprite->setRotation(180 / b2_pi * body->GetAngle());
+	shape->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
+	shape->setRotation((180 / b2_pi * body->GetAngle()) + 45);
+	
 
 }
 
 void Object::draw(sf::RenderWindow &window)
 {
-	window.draw(*sprite);
+	window.draw(*shape);
 }
 
 void Object::applyForce(b2Vec2 force, int duration)
@@ -68,7 +69,7 @@ sf::Vector2f Object::convertCoord(sf::RenderWindow &window)
 
 bool Object::isTargeted(sf::RenderWindow &window)
 {
-	if (sprite->getGlobalBounds().contains(convertCoord(window)))
+	if (shape->getGlobalBounds().contains(convertCoord(window)))
 		return true;
 	else
 		return false;
@@ -77,5 +78,5 @@ bool Object::isTargeted(sf::RenderWindow &window)
 void Object::destroy(b2World& world)
 {
 	world.DestroyBody(body);
-	delete sprite;
+	delete shape;
 }

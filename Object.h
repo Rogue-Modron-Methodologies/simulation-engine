@@ -21,8 +21,8 @@ class Object //: public sf::Drawable, public sf::Transformable
 protected:
 	b2Body* body;
 	//sf::Drawable *sprite;   // zzzz dynamic casting
-	//sf::Shape *sh;
-	sf::Sprite* sprite;
+	sf::Shape *shape;
+	//sf::Sprite* sprite;
 	bool isForceActive;
 	b2Vec2 activeForce;
 	int forceDuration;
@@ -36,15 +36,13 @@ public:
 		done = false;
 		isForceActive = false;
 		
-		sprite = new sf::Sprite(text);
-		sprite->setOrigin(sprite->getLocalBounds().width / 2.f, sprite->getLocalBounds().height / 2.f);
 	}
 	virtual void update(); 
 	virtual void draw(sf::RenderWindow &window);
 	void applyForce(b2Vec2 force, int duration);	
 	bool isTargeted(sf::RenderWindow &window);
 	void destroy(b2World& world);
-	void setColor(sf::Color c = sf::Color::Transparent) { sprite->setColor(c); }
+	void setColor(sf::Color c = sf::Color::Transparent) { shape->setFillColor(c); }
 	static sf::Color randColor() { return sf::Color(rand() % 255, rand() % 255, rand() % 255); }
 
 private:
