@@ -13,6 +13,7 @@ public:
 		body->CreateFixture(&fDef);
 
 	}
+
 };
 #endif // DYNAMIC_OBJECT_H
 

@@ -70,7 +70,7 @@ void Simulation::changeWorldOptions(int userChoice) {
 	switch (userChoice) {
 	case 1: // Gravity
 		menu.setParams(-DBL_MAX, DBL_MAX, "Enter Gravity (Horizontal & Vertical)");
-		world.SetGravity(b2Vec2((float32)menu.getParam1(), (float32)menu.getParam2()));
+		cOptions.cGravity = b2Vec2((float32)menu.getParam1(), (float32)menu.getParam2());
 		break;
 	default:
 		break;
@@ -82,10 +82,9 @@ void Simulation::changeObjectOptions(int userChoice) {
 	switch (userChoice) {
 	case 1: // Number
 		std::cout << "How Many Objects?\n";
-		cin >> 	cOptions.numObjects;     // menu.displayMenu(vector<string>{"How Many Objects?"});
+		cin >> 	cOptions.numObjects;     
 		break;
 	case 2: // Color
-		std::cout << "Color Options Here\n";
 		choice = menu.displayMenu(COLOR_LIST);
 		switch (choice)
 		{
@@ -98,31 +97,49 @@ void Simulation::changeObjectOptions(int userChoice) {
 		case 3:
 			cOptions.color = sf::Color::Blue;
 			break;
-		default:
+		case 4:
 			cOptions.color = sf::Color::Transparent;
 			break;
+		default:
+			cOptions.color = Object::randColor();
+			break;
 		}
+		break;
+	case 3: // Density
+		std::cout << "Density\n";
+		cin >> cOptions.density;
+		break;
+	case 4: // Friction
+		std::cout << "Friction \n";
+		cin >> cOptions.friction;
+		break;
+	case 5: // Restitution
+		std::cout << "Resitution\n";
+		cin >> cOptions.resitution;
+		break;
+
 	default:
 		break;
 	}
 }
 
 void Simulation::randomizeOptions() {
-
-	float32 x = static_cast<float32>(rand() % 100 - 50);
-	float32 y = static_cast<float32>(rand() % 100 - 50);
 	cOptions.name = "Random Simulation";
+	float32 x = static_cast<float32>(rand() % 80 - 40);
+	float32 y = static_cast<float32>(rand() % 80 - 40);
 	cOptions.cGravity = b2Vec2(x, y);
 	cOptions.numObjects = rand() % 100;
 	cOptions.color = Object::randColor();
-
-
+	cOptions.density = (float32)(rand() % 5 + 1);
+	cOptions.friction = (float32)((rand() % 100 + 1) / 100.0);
+	cOptions.resitution = (float32)((rand() % 100 + 1) / 100.0);
 }
 
 void Simulation::loadSimulation() {
 	window = new sf::RenderWindow(sf::VideoMode(1000, 1000), cOptions.name);
 	window->setFramerateLimit(60);
 	world.SetGravity(cOptions.cGravity);
+
 	loadEnviornment();
 	loadObjectList();
 }
@@ -156,20 +173,15 @@ void Simulation::loadEnviornment() {
 
 void Simulation::loadObjectList() {
 	b2PolygonShape shape;
-	shape.SetAsBox((100.f / 2) / SCALE, (1000.f / 2) / SCALE);
-
 	b2BodyDef bodyDef;
-	bodyDef.position = b2Vec2(500.f / SCALE, 1000.f / SCALE);
-
 	b2FixtureDef boxFixtureDef;
-	boxFixtureDef.density = 1.f;
-	boxFixtureDef.friction = 0.7f;
+	boxFixtureDef.density = cOptions.density;
+	boxFixtureDef.friction = cOptions.friction;
+	boxFixtureDef.restitution = cOptions.resitution;
 	boxFixtureDef.shape = &shape;
-	boxFixtureDef.restitution = 1;
 
 	int randx, randy;
-	for (int i = 0; i < cOptions.numObjects; i++)
-	{
+	for (int i = 0; i < cOptions.numObjects; i++) {
 		randx = rand() % 200 - 100;
 		randy = rand() % 200 - 100;
 		bodyDef.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
@@ -178,6 +190,18 @@ void Simulation::loadObjectList() {
 		objectList.back().applyForce(b2Vec2(float32(randx), float32(randy)), 100);
 		objectList.back().setColor(cOptions.color);
 	}
+}
+
+void Simulation::displayCurrentOptions() {
+	cout << left << setw(20) << "Simulation Name:" << cOptions.name << endl;
+	cout << left << setw(20) << "Gravity:" << cOptions.cGravity.x << " " << cOptions.cGravity.y << endl;
+	cout << left << setw(20) << "Number of Objects:" << cOptions.numObjects << endl;
+	cout << left << setw(20) << "Color:" << cOptions.color.toInteger() << endl;
+	cout << left << setw(20) << "Density:" << cOptions.density << endl;
+	cout << left << setw(20) << "Restitution:" << cOptions.resitution << endl;
+	cout << left << setw(20) << "Friction:" << cOptions.friction << endl;
+
+	cout << endl;
 }
 
 void Simulation::runSimulation() {
@@ -239,12 +263,3 @@ void Simulation::runSimulation() {
 	delete window;
 }
 
-void Simulation::displayCurrentOptions() {
-	cout << left << setw(20) << "Simulation Name:" << cOptions.name << endl;
-	cout << left << setw(20) << "Gravity:" << cOptions.cGravity.x << " " << cOptions.cGravity.y << endl;
-	cout << left << setw(20) << "Number of Objects:" << cOptions.numObjects << endl;
-	cout << left << setw(20) << "Color:" << cOptions.color.toInteger() << endl;
-
-	cout << endl;
-
-}

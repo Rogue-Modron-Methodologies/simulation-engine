@@ -5,6 +5,8 @@
 #include <Box2D\Box2D.h>
 #include <iostream>
 
+enum class Shape { square, circle, triangle };
+
 // pixel to real-world conversion
 static const float SCALE = 30.f;
 
@@ -14,9 +16,12 @@ static const float SCALE = 30.f;
 // bool active
 // updateForces()
 
-class Object {
+class Object //: public sf::Drawable, public sf::Transformable
+{
 protected:
 	b2Body* body;
+	//sf::Drawable *sprite;   // zzzz dynamic casting
+	//sf::Shape *sh;
 	sf::Sprite* sprite;
 	bool isForceActive;
 	b2Vec2 activeForce;
@@ -30,6 +35,7 @@ public:
 		active = false;
 		done = false;
 		isForceActive = false;
+		
 		sprite = new sf::Sprite(text);
 		sprite->setOrigin(sprite->getLocalBounds().width / 2.f, sprite->getLocalBounds().height / 2.f);
 	}
