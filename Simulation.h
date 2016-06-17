@@ -9,8 +9,6 @@
 #include <stdlib.h>
 #include <ctime>
 
-
-
 const std::vector<string> MAIN_MENU = { 
 	"Run with current options.",
 	"View current options.",
@@ -26,7 +24,8 @@ const std::vector<string> WORLD_OPTION_MENU = {
 	"Gravity Option" };
 const std::vector<string> OBJECT_OPTION_MENU = {
 	"Quantity",
-	//"Shape"
+	"Dimensions",
+	"Shape",
 	"Color",
 	"Density",
 	"Friction",
@@ -37,23 +36,17 @@ const std::vector<string> COLOR_LIST = {
 	"Blue",
 	"None",
 	"Random" };
+const std::vector<string> SHAPE_LIST = {
+	"Circle",
+	"Rectangle",
+	"Square",
+	"Triangle" };
 const b2Vec2 DGRAVITY(0.f, 10.f);
 const std::string BOX = "box.png";
 const std::string GROUND = "ground.png";
 const std::string WALL = "wall.png";
 
-struct Options {
-	std::string name;
-	b2Vec2 cGravity;
-	int numObjects;
-	Shape shape;
-	sf::Color color;
-	float32 density;
-	float32 friction;
-	float32 resitution;
-	//shape.setOutlineThickness(10);
-	//shape.setOutlineColor(sf::Color(250, 150, 100));
-};
+
 
 class Simulation {
 

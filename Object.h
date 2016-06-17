@@ -5,10 +5,27 @@
 #include <Box2D\Box2D.h>
 #include <iostream>
 
-enum class Shape { square, circle, triangle };
+enum class Shape { circle, rectangle, square, triangle };
 
 // pixel to real-world conversion
 static const float SCALE = 30.f;
+
+struct Options {
+	std::string name;
+	b2Vec2 cGravity;
+	b2PolygonShape b2Shape;
+	b2BodyDef bodyDef;
+	b2FixtureDef fixtDef;   // density, friction, shape, restitution
+	int numObjects;
+	b2Vec2 dimension;
+	Shape sfShape;
+	sf::Color color;
+	//	float32 density;
+	//	float32 friction;
+	//	float32 resitution;
+	//shape.setOutlineThickness(10);
+	//shape.setOutlineColor(sf::Color(250, 150, 100));
+};
 
 // force structure/class
 // b2Vec2 force
@@ -20,9 +37,7 @@ class Object //: public sf::Drawable, public sf::Transformable
 {
 protected:
 	b2Body* body;
-	//sf::Drawable *sprite;   // zzzz dynamic casting
 	sf::Shape *shape;
-	//sf::Sprite* sprite;
 	bool isForceActive;
 	b2Vec2 activeForce;
 	int forceDuration;
@@ -30,7 +45,7 @@ protected:
 	bool done;
 
 public:
-	Object(const sf::Texture &text)
+	Object()
 	{
 		active = false;
 		done = false;

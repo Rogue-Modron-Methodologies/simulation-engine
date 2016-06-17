@@ -9,6 +9,8 @@ Simulation::Simulation() : txtMngr(), menu(), world(DGRAVITY) {
 	cOptions.cGravity = DGRAVITY;
 	cOptions.numObjects = 100;
 	cOptions.color = sf::Color::Black;
+	cOptions.sfShape = Shape::square; 
+	cOptions.dimension = b2Vec2(32.0, 32.0);
 }
 
 Simulation::~Simulation() {};
@@ -80,11 +82,36 @@ void Simulation::changeWorldOptions(int userChoice) {
 void Simulation::changeObjectOptions(int userChoice) {
 	int choice;
 	switch (userChoice) {
-	case 1: // Number
+	case 1: // Quantity
 		std::cout << "How Many Objects?\n";
 		cin >> 	cOptions.numObjects;     
 		break;
-	case 2: // Color
+	case 2: // Dimensions
+		//choice = menu.displayMenu(COLOR_LIST);
+
+
+		break;
+	case 3: // Shape
+		choice = menu.displayMenu(SHAPE_LIST);
+		switch (Shape(choice - 1))
+		{
+		case Shape::circle:
+			std::cout << "Circle\n";
+			break;
+		case Shape::square:
+			std::cout << "Square\n";
+			break;
+		case Shape::rectangle:
+			std::cout << "Rectangle\n";
+			break;
+		case Shape::triangle:
+			std::cout << "Triangle\n";
+			break;
+		default:
+			break;
+		}
+		break;
+	case 4: // Color
 		choice = menu.displayMenu(COLOR_LIST);
 		switch (choice)
 		{
@@ -105,17 +132,17 @@ void Simulation::changeObjectOptions(int userChoice) {
 			break;
 		}
 		break;
-	case 3: // Density
+	case 5: // Density
 		std::cout << "Density\n";
-		cin >> cOptions.density;
+		cin >> cOptions.fixtDef.density;
 		break;
-	case 4: // Friction
+	case 6: // Friction
 		std::cout << "Friction \n";
-		cin >> cOptions.friction;
+		cin >> cOptions.fixtDef.friction;
 		break;
-	case 5: // Restitution
+	case 7: // Restitution
 		std::cout << "Resitution\n";
-		cin >> cOptions.resitution;
+		cin >> cOptions.fixtDef.restitution;
 		break;
 
 	default:
@@ -130,9 +157,11 @@ void Simulation::randomizeOptions() {
 	cOptions.cGravity = b2Vec2(x, y);
 	cOptions.numObjects = rand() % 100;
 	cOptions.color = Object::randColor();
-	cOptions.density = (float32)(rand() % 5 + 1);
-	cOptions.friction = (float32)((rand() % 100 + 1) / 100.0);
-	cOptions.resitution = (float32)((rand() % 100 + 1) / 100.0);
+	cOptions.fixtDef.density = (float32)(rand() % 5 + 1);
+	cOptions.fixtDef.friction = (float32)((rand() % 100 + 1) / 100.0);
+	cOptions.fixtDef.restitution = (float32)((rand() % 100 + 1) / 100.0);
+
+	
 }
 
 void Simulation::loadSimulation() {
@@ -156,28 +185,28 @@ void Simulation::loadEnviornment() {
 
 	b2BodyDef bodyDef;
 	bodyDef.position = b2Vec2(500.f / SCALE, 1000.f / SCALE);
-	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef, txtMngr.getResource(GROUND)));
+	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef));
 
 	bodyDef.position = b2Vec2(500.f / SCALE, 0.f / SCALE);
-	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef, txtMngr.getResource(GROUND)));
+	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef));
 
 	shape.SetAsBox((100.f / 2) / SCALE, (1000.f / 2) / SCALE);
 	groundFixtureDef.shape = &shape;
 
 	bodyDef.position = b2Vec2(1000.f / SCALE, 500.f / SCALE);
-	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef, txtMngr.getResource(WALL)));
+	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef));
 
 	bodyDef.position = b2Vec2(0.f / SCALE, 500.f / SCALE);
-	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef, txtMngr.getResource(WALL)));
+	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef));
 }
 
 void Simulation::loadObjectList() {
 	b2PolygonShape shape;
 	b2BodyDef bodyDef;
 	b2FixtureDef boxFixtureDef;
-	boxFixtureDef.density = cOptions.density;
-	boxFixtureDef.friction = cOptions.friction;
-	boxFixtureDef.restitution = cOptions.resitution;
+	boxFixtureDef.density = cOptions.fixtDef.density;
+	boxFixtureDef.friction = cOptions.fixtDef.friction;
+	boxFixtureDef.restitution = cOptions.fixtDef.restitution;
 	boxFixtureDef.shape = &shape;
 
 	int randx, randy;
@@ -186,7 +215,7 @@ void Simulation::loadObjectList() {
 		randy = rand() % 200 - 100;
 		bodyDef.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
 		shape.SetAsBox((32.f / 2) / SCALE, (32.f / 2) / SCALE);
-		objectList.push_back(DynamicObject(world, bodyDef, boxFixtureDef, txtMngr.getResource(BOX)));
+		objectList.push_back(DynamicObject(world, bodyDef, boxFixtureDef));
 		objectList.back().applyForce(b2Vec2(float32(randx), float32(randy)), 100);
 		objectList.back().setColor(cOptions.color);
 	}
@@ -197,9 +226,9 @@ void Simulation::displayCurrentOptions() {
 	cout << left << setw(20) << "Gravity:" << cOptions.cGravity.x << " " << cOptions.cGravity.y << endl;
 	cout << left << setw(20) << "Number of Objects:" << cOptions.numObjects << endl;
 	cout << left << setw(20) << "Color:" << cOptions.color.toInteger() << endl;
-	cout << left << setw(20) << "Density:" << cOptions.density << endl;
-	cout << left << setw(20) << "Restitution:" << cOptions.resitution << endl;
-	cout << left << setw(20) << "Friction:" << cOptions.friction << endl;
+	cout << left << setw(20) << "Density:" << cOptions.fixtDef.density << endl;
+	cout << left << setw(20) << "Restitution:" << cOptions.fixtDef.restitution << endl;
+	cout << left << setw(20) << "Friction:" << cOptions.fixtDef.friction << endl;
 
 	cout << endl;
 }

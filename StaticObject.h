@@ -6,7 +6,7 @@
 class StaticObject : public Object
 {
 public:
-	StaticObject(b2World& world, b2BodyDef &bDef, b2FixtureDef &fDef, const sf::Texture &text) : Object(text) {
+	StaticObject(b2World& world, b2BodyDef &bDef, b2FixtureDef &fDef) : Object() {
 
 	bDef.type = b2_staticBody;
 	body = world.CreateBody(&bDef);
