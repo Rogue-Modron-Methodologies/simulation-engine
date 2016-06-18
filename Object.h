@@ -10,14 +10,13 @@ enum class Shape { circle, rectangle, square, triangle };
 // pixel to real-world conversion
 static const float SCALE = 30.f;
 
-struct Options {
-	std::string name;
-	b2Vec2 cGravity;
+struct objTemplate {
 	b2PolygonShape b2Shape;
 	b2BodyDef bodyDef;
 	b2FixtureDef fixtDef;   // density, friction, shape, restitution
-	int numObjects;
+	int quantity;
 	b2Vec2 dimension;
+	b2Vec2 position;
 	Shape sfShape;
 	sf::Color color;
 	//shape.setOutlineThickness(10);

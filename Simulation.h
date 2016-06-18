@@ -16,11 +16,9 @@ const std::vector<string> MAIN_MENU = {
 	"Randomize Options." };
 const std::vector<string> CURRENT_OPTION_MENU = {
 	"Simulation Options",
-	"World Options",
 	"Object Options" };
 const std::vector<string> SIMULATION_OPTION_MENU = {
-	"Simulation Name" };
-const std::vector<string> WORLD_OPTION_MENU = {
+	"Simulation Name", 
 	"Gravity Option" };
 const std::vector<string> OBJECT_OPTION_MENU = {
 	"Quantity",
@@ -42,17 +40,19 @@ const std::vector<string> SHAPE_LIST = {
 	"Square",
 	"Triangle" };
 const b2Vec2 DGRAVITY(0.f, 10.f);
-const std::string BOX = "box.png";
-const std::string GROUND = "ground.png";
-const std::string WALL = "wall.png";
 
-
+struct simTemplate {
+	std::string name;
+	b2Vec2 gravity;
+};
 
 class Simulation {
 	ResourceManager<sf::Texture> txtMngr;
 	sf::RenderWindow *window;
 	std::vector<Object> objectList;
-	Options cOptions;
+	simTemplate simOptions;
+	objTemplate foreObjOptions;
+	objTemplate backObjOptions;
 	b2World world;
 	ConsoleMenu menu;
 
@@ -70,7 +70,6 @@ private:
 	int loadMainMenu();
 	void changeOptions(); 
 	void changeSimulationOptions(int userChoice);
-	void changeWorldOptions(int userChoice);
 	void changeObjectOptions(int userChoice);
 	void displayCurrentOptions();
 }; 

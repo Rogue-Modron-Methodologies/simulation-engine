@@ -5,12 +5,12 @@ Simulation::Simulation() : txtMngr(), menu(), world(DGRAVITY) {
 	txtMngr.getResource("box.png");
 	txtMngr.getResource("ground.png");
 	txtMngr.getResource("wall.png");
-	cOptions.name = "Simulation";
-	cOptions.cGravity = DGRAVITY;
-	cOptions.numObjects = 100;
-	cOptions.color = sf::Color::Black;
-	cOptions.sfShape = Shape::square; 
-	cOptions.dimension = b2Vec2(32.0, 32.0);
+	simOptions.name = "Simulation";
+	simOptions.gravity = DGRAVITY;
+	foreObjOptions.quantity = 100;
+	foreObjOptions.color = sf::Color::Black;
+	foreObjOptions.sfShape = Shape::square;
+	foreObjOptions.dimension = b2Vec2(32.0 / 2, 32.0 / 2);
 }
 
 Simulation::~Simulation() {};
@@ -44,11 +44,7 @@ void Simulation::changeOptions() {
 		option = menu.displayMenu(SIMULATION_OPTION_MENU);
 		changeSimulationOptions(option);
 		break;
-	case 2: // World Options
-		option = menu.displayMenu(WORLD_OPTION_MENU);
-		changeWorldOptions(option);
-		break;
-	case 3: // Object Options
+	case 2: // Object Options
 		option = menu.displayMenu(OBJECT_OPTION_MENU);
 		changeObjectOptions(option);
 		break;
@@ -61,38 +57,33 @@ void Simulation::changeSimulationOptions(int userChoice) {
 	switch (userChoice) {
 	case 1: // Simuation Name
 		menu.setStringInput("Simulation Name");
-		cOptions.name = menu.getString();
+		simOptions.name = menu.getString();
+		break;
+	case 2: // Gravity
+		menu.setParams(-DBL_MAX, DBL_MAX, "Enter Gravity (Horizontal & Vertical)");
+		simOptions.gravity = b2Vec2((float32)menu.getParam1(), (float32)menu.getParam2());
 		break;
 	default:
 		break;
 	}
 }
 
-void Simulation::changeWorldOptions(int userChoice) {
-	switch (userChoice) {
-	case 1: // Gravity
-		menu.setParams(-DBL_MAX, DBL_MAX, "Enter Gravity (Horizontal & Vertical)");
-		cOptions.cGravity = b2Vec2((float32)menu.getParam1(), (float32)menu.getParam2());
-		break;
-	default:
-		break;
-	}
-}
 
 void Simulation::changeObjectOptions(int userChoice) {
 	int choice;
 	switch (userChoice) {
 	case 1: // Quantity
 		std::cout << "How Many Objects?\n";
-		cin >> 	cOptions.numObjects;     
+		cin >> foreObjOptions.quantity;
 		break;
 	case 2: // Dimensions
-		//choice = menu.displayMenu(COLOR_LIST);
+		cout << "Enter Dimension\n";
+		cin >> foreObjOptions.dimension.x;
+		foreObjOptions.dimension.y = foreObjOptions.dimension.x;
 		break;
 	case 3: // Shape
 		choice = menu.displayMenu(SHAPE_LIST);
-		switch (Shape(choice - 1))
-		{
+		switch (Shape(choice - 1)) {
 		case Shape::circle:
 			std::cout << "Circle\n";
 			break;
@@ -114,33 +105,33 @@ void Simulation::changeObjectOptions(int userChoice) {
 		switch (choice)
 		{
 		case 1:
-			cOptions.color = sf::Color::Red;
+			foreObjOptions.color = sf::Color::Red;
 			break;
 		case 2:
-			cOptions.color = sf::Color::Green;
+			foreObjOptions.color = sf::Color::Green;
 			break;
 		case 3:
-			cOptions.color = sf::Color::Blue;
+			foreObjOptions.color = sf::Color::Blue;
 			break;
 		case 4:
-			cOptions.color = sf::Color::Transparent;
+			foreObjOptions.color = sf::Color::Transparent;
 			break;
 		default:
-			cOptions.color = Object::randColor();
+			foreObjOptions.color = Object::randColor();
 			break;
 		}
 		break;
 	case 5: // Density
 		std::cout << "Density\n";
-		cin >> cOptions.fixtDef.density;
+		cin >> foreObjOptions.fixtDef.density;
 		break;
 	case 6: // Friction
 		std::cout << "Friction \n";
-		cin >> cOptions.fixtDef.friction;
+		cin >> foreObjOptions.fixtDef.friction;
 		break;
 	case 7: // Restitution
 		std::cout << "Resitution\n";
-		cin >> cOptions.fixtDef.restitution;
+		cin >> foreObjOptions.fixtDef.restitution;
 		break;
 	default:
 		break;
@@ -148,21 +139,24 @@ void Simulation::changeObjectOptions(int userChoice) {
 }
 
 void Simulation::randomizeOptions() {
-	cOptions.name = "Random Simulation";
+	simOptions.name = "Random Simulation";
 	float32 x = static_cast<float32>(rand() % 80 - 40);
 	float32 y = static_cast<float32>(rand() % 80 - 40);
-	cOptions.cGravity = b2Vec2(x, y);
-	cOptions.numObjects = rand() % 100;
-	cOptions.color = Object::randColor();
-	cOptions.fixtDef.density = (float32)(rand() % 5 + 1);
-	cOptions.fixtDef.friction = (float32)((rand() % 100 + 1) / 100.0);
-	cOptions.fixtDef.restitution = (float32)((rand() % 100 + 1) / 100.0);
+	simOptions.gravity = b2Vec2(x, y);
+	foreObjOptions.quantity = rand() % 100;
+	foreObjOptions.color = Object::randColor();
+	foreObjOptions.fixtDef.density = (float32)(rand() % 5 + 1);
+	foreObjOptions.fixtDef.friction = (float32)((rand() % 100 + 1) / 100.0);
+	foreObjOptions.fixtDef.restitution = (float32)((rand() % 100 + 1) / 100.0);
+	foreObjOptions.dimension.x = rand() % 50 + 10.0f;
+	foreObjOptions.dimension.y = rand() % 50 + 10.0f;
+
 }
 
 void Simulation::loadSimulation() {
-	window = new sf::RenderWindow(sf::VideoMode(1000, 1000), cOptions.name);
+	window = new sf::RenderWindow(sf::VideoMode(1000, 1000), simOptions.name);
 	window->setFramerateLimit(60);
-	world.SetGravity(cOptions.cGravity);
+	world.SetGravity(simOptions.gravity);
 
 	loadEnviornment();
 	loadObjectList();
@@ -196,22 +190,27 @@ void Simulation::loadEnviornment() {
 }
 
 void Simulation::loadObjectList() {
-	for (int i = 0; i < cOptions.numObjects; i++) {
-		objectList.push_back(DynamicObject(world, window, cOptions));
+	for (int i = 0; i < foreObjOptions.quantity; i++) {
+		foreObjOptions.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
+		objectList.push_back(DynamicObject(world, window, foreObjOptions));
 		objectList.back().applyForce(b2Vec2(float32(rand() % 200 - 100), float32(rand() % 200 - 100)), 100);
 	}
 }
 
 void Simulation::displayCurrentOptions() {
-	cout << left << setw(20) << "Simulation Name:" << cOptions.name << endl;
-	cout << left << setw(20) << "Gravity:" << cOptions.cGravity.x << " " << cOptions.cGravity.y << endl;
-	cout << left << setw(20) << "Number of Objects:" << cOptions.numObjects << endl;
-	cout << left << setw(20) << "Color:" << cOptions.color.toInteger() << endl;
-	cout << left << setw(20) << "Density:" << cOptions.fixtDef.density << endl;
-	cout << left << setw(20) << "Restitution:" << cOptions.fixtDef.restitution << endl;
-	cout << left << setw(20) << "Friction:" << cOptions.fixtDef.friction << endl;
+	std::cout << left;
+	std::cout << setw(20) << "Simulation Options:\n";
+	std::cout << setw(20) << "Simulation Name:" << simOptions.name << std::endl;
+	std::cout << setw(20) << "Gravity:" << "X: " << simOptions.gravity.x << "  Y: " << simOptions.gravity.y << std::endl << std::endl;
+	std::cout << setw(20) << "Foreground Objects:\n";
+	std::cout << setw(20) << "Quantity:" << foreObjOptions.quantity << std::endl;
+	std::cout << setw(20) << "Dimensions:" << "X: " << foreObjOptions.dimension.x << "  Y: " << foreObjOptions.dimension.y << std::endl;
+	std::cout << setw(20) << "Color:" << foreObjOptions.color.toInteger() << std::endl;
+	std::cout << setw(20) << "Density:" << foreObjOptions.fixtDef.density << std::endl;
+	std::cout << setw(20) << "Restitution:" << foreObjOptions.fixtDef.restitution << std::endl;
+	std::cout << setw(20) << "Friction:" << foreObjOptions.fixtDef.friction << std::endl << std::endl;
 
-	cout << endl;
+	cout << std::endl;
 }
 
 void Simulation::runSimulation() {
