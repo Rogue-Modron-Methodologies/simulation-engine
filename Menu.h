@@ -6,8 +6,7 @@
 #include <Box2D\Box2D.h>
 #include "ConsoleColor.h"
 
-class Menu
-{
+class Menu {
 private:
 	double param1;
 	double param2;

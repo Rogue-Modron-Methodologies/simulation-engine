@@ -17,7 +17,6 @@ public:
 		return getValidInput(1, (int)prompts.size() + 1);
 	}
 
-
 	template <class T>	// get a pair of valid parameters
 	void setParams(T low, T high, std::string prompt = "") {
 		cin.ignore();
@@ -45,14 +44,12 @@ private:
 	}
 
 	template <class T>
-	T getValidInput(T low, T high)
-	{
+	T getValidInput(T low, T high) 	{
 		T temp;
 		bool validInput = true;
 		do {
 			std::cin >> temp;
-			if (std::cin.fail() || temp < low || temp > high)
-			{
+			if (std::cin.fail() || temp < low || temp > high) {
 				std::cin.clear();
 				std::cin.ignore(INT_MAX, '\n');
 				std::cout << "\nMust be between " << low << " and " << high << ". Please try again.\n";

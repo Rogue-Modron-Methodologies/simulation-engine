@@ -49,7 +49,6 @@ const std::string WALL = "wall.png";
 
 
 class Simulation {
-
 	ResourceManager<sf::Texture> txtMngr;
 	sf::RenderWindow *window;
 	std::vector<Object> objectList;

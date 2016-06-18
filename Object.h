@@ -20,9 +20,6 @@ struct Options {
 	b2Vec2 dimension;
 	Shape sfShape;
 	sf::Color color;
-	//	float32 density;
-	//	float32 friction;
-	//	float32 resitution;
 	//shape.setOutlineThickness(10);
 	//shape.setOutlineColor(sf::Color(250, 150, 100));
 };
@@ -33,8 +30,7 @@ struct Options {
 // bool active
 // updateForces()
 
-class Object //: public sf::Drawable, public sf::Transformable
-{
+class Object { //: public sf::Drawable, public sf::Transformable
 protected:
 	b2Body* body;
 	sf::Shape *shape;
@@ -45,23 +41,18 @@ protected:
 	bool done;
 
 public:
-	Object()
-	{
+	Object() {
 		active = false;
 		done = false;
-		isForceActive = false;
-		
+		isForceActive = false;		
 	}
 	virtual void update(); 
 	virtual void draw(sf::RenderWindow &window);
 	void applyForce(b2Vec2 force, int duration);	
 	bool isTargeted(sf::RenderWindow &window);
 	void destroy(b2World& world);
-	void setColor(sf::Color c = sf::Color::Transparent) { shape->setFillColor(c); }
 	static sf::Color randColor() { return sf::Color(rand() % 255, rand() % 255, rand() % 255); }
-
 private:
 	sf::Vector2f convertCoord(sf::RenderWindow &window);
-
 };
 #endif // OBJECT_H

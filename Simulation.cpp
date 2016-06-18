@@ -88,8 +88,6 @@ void Simulation::changeObjectOptions(int userChoice) {
 		break;
 	case 2: // Dimensions
 		//choice = menu.displayMenu(COLOR_LIST);
-
-
 		break;
 	case 3: // Shape
 		choice = menu.displayMenu(SHAPE_LIST);
@@ -144,7 +142,6 @@ void Simulation::changeObjectOptions(int userChoice) {
 		std::cout << "Resitution\n";
 		cin >> cOptions.fixtDef.restitution;
 		break;
-
 	default:
 		break;
 	}
@@ -160,8 +157,6 @@ void Simulation::randomizeOptions() {
 	cOptions.fixtDef.density = (float32)(rand() % 5 + 1);
 	cOptions.fixtDef.friction = (float32)((rand() % 100 + 1) / 100.0);
 	cOptions.fixtDef.restitution = (float32)((rand() % 100 + 1) / 100.0);
-
-	
 }
 
 void Simulation::loadSimulation() {
@@ -201,23 +196,9 @@ void Simulation::loadEnviornment() {
 }
 
 void Simulation::loadObjectList() {
-	b2PolygonShape shape;
-	b2BodyDef bodyDef;
-	b2FixtureDef boxFixtureDef;
-	boxFixtureDef.density = cOptions.fixtDef.density;
-	boxFixtureDef.friction = cOptions.fixtDef.friction;
-	boxFixtureDef.restitution = cOptions.fixtDef.restitution;
-	boxFixtureDef.shape = &shape;
-
-	int randx, randy;
 	for (int i = 0; i < cOptions.numObjects; i++) {
-		randx = rand() % 200 - 100;
-		randy = rand() % 200 - 100;
-		bodyDef.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
-		shape.SetAsBox((32.f / 2) / SCALE, (32.f / 2) / SCALE);
-		objectList.push_back(DynamicObject(world, bodyDef, boxFixtureDef));
-		objectList.back().applyForce(b2Vec2(float32(randx), float32(randy)), 100);
-		objectList.back().setColor(cOptions.color);
+		objectList.push_back(DynamicObject(world, window, cOptions));
+		objectList.back().applyForce(b2Vec2(float32(rand() % 200 - 100), float32(rand() % 200 - 100)), 100);
 	}
 }
 

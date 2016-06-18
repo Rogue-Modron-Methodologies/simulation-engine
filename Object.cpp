@@ -39,7 +39,6 @@ void Object::update()
 	}
 	shape->setPosition(body->GetPosition().x * SCALE, body->GetPosition().y * SCALE);
 	shape->setRotation((180 / b2_pi * body->GetAngle()) + 45);
-	
 
 }
 
