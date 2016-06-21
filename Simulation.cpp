@@ -241,8 +241,8 @@ void Simulation::runSimulation() {
 					{
 						if (it->isTargeted(*window))
 						{
-							int randx = rand() % 200 - 100;
-							int randy = rand() % 200 - 100;
+							int randx = rand() % 400 - 200;
+							int randy = rand() % 400 - 200;
 							it->applyForce(b2Vec2(float32(randx), float32(randy)), 100);
 							/*						std::cout << randx << " " << randy << std::endl;
 							it = objectList.erase(it);

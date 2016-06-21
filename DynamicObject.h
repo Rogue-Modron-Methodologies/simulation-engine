@@ -11,6 +11,7 @@ public:
 		switch (cOptions.sfShape)	
 		{
 		case Shape::square:
+			cOptions.dimension.y = cOptions.dimension.x;
 			cOptions.b2Shape.SetAsBox((cOptions.dimension.x) / SCALE, (cOptions.dimension.y) / SCALE);
 			shape = new sf::CircleShape(roundf((float)sqrt(pow(cOptions.dimension.x, 2) * 2)), 4);
 			break;
