@@ -8,15 +8,14 @@
 enum class Shape { circle, rectangle, square, triangle };
 
 // pixel to real-world conversion
-static const float SCALE = 30.f;
+static const float SCALE = 32.f;
 
 struct objTemplate {
 	b2PolygonShape b2Shape;
-	b2BodyDef bodyDef;
+	b2BodyDef bodyDef;		// position
 	b2FixtureDef fixtDef;   // density, friction, shape, restitution
 	int quantity;
 	b2Vec2 dimension;
-	b2Vec2 position;
 	Shape sfShape;
 	sf::Color color;
 	//shape.setOutlineThickness(10);

@@ -5,9 +5,12 @@
 #include "DynamicObject.h"
 #include "ResourceManager.h"
 #include "ConsoleMenu.h"
+#include "SFMLDebugDraw.h"
 #include <vector>
 #include <stdlib.h>
 #include <ctime>
+
+const bool DEBUG = false;		// toggle debug draw
 
 const std::vector<string> MAIN_MENU = { 
 	"Run with current options.",
@@ -39,6 +42,7 @@ const std::vector<string> SHAPE_LIST = {
 	"Rectangle",
 	"Square",
 	"Triangle" };
+
 const b2Vec2 DGRAVITY(0.f, 10.f);
 
 struct simTemplate {
@@ -55,6 +59,7 @@ class Simulation {
 	objTemplate backObjOptions;
 	b2World world;
 	ConsoleMenu menu;
+	SFMLDebugDraw *dbDraw;
 
 public:
 	Simulation();

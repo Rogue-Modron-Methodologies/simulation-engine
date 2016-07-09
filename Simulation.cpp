@@ -7,10 +7,14 @@ Simulation::Simulation() : txtMngr(), menu(), world(DGRAVITY) {
 	txtMngr.getResource("wall.png");
 	simOptions.name = "Simulation";
 	simOptions.gravity = DGRAVITY;
-	foreObjOptions.quantity = 100;
+	foreObjOptions.quantity = 10;
 	foreObjOptions.color = sf::Color::Black;
 	foreObjOptions.sfShape = Shape::square;
 	foreObjOptions.dimension = b2Vec2(32.0 / 2, 32.0 / 2);
+	backObjOptions.quantity = 10;
+	backObjOptions.color = sf::Color::Black;
+	backObjOptions.sfShape = Shape::square;
+	backObjOptions.dimension = b2Vec2(32.0 / 2, 32.0 / 2);
 }
 
 Simulation::~Simulation() {};
@@ -67,7 +71,6 @@ void Simulation::changeSimulationOptions(int userChoice) {
 		break;
 	}
 }
-
 
 void Simulation::changeObjectOptions(int userChoice) {
 	int choice;
@@ -143,6 +146,7 @@ void Simulation::randomizeOptions() {
 	float32 x = static_cast<float32>(rand() % 80 - 40);
 	float32 y = static_cast<float32>(rand() % 80 - 40);
 	simOptions.gravity = b2Vec2(x, y);
+
 	foreObjOptions.quantity = rand() % 100;
 	foreObjOptions.color = Object::randColor();
 	foreObjOptions.fixtDef.density = (float32)(rand() % 5 + 1);
@@ -151,47 +155,71 @@ void Simulation::randomizeOptions() {
 	foreObjOptions.dimension.x = rand() % 50 + 10.0f;
 	foreObjOptions.dimension.y = rand() % 50 + 10.0f;
 
+	backObjOptions.quantity = rand() % 100;
+	backObjOptions.color = Object::randColor();
+	backObjOptions.fixtDef.density = (float32)(rand() % 5 + 1);
+	backObjOptions.fixtDef.friction = (float32)((rand() % 100 + 1) / 100.0);
+	backObjOptions.fixtDef.restitution = (float32)((rand() % 100 + 1) / 100.0);
+	backObjOptions.dimension.x = rand() % 50 + 10.0f;
+	backObjOptions.dimension.y = rand() % 50 + 10.0f;
 }
 
 void Simulation::loadSimulation() {
 	window = new sf::RenderWindow(sf::VideoMode(1000, 1000), simOptions.name);
 	window->setFramerateLimit(60);
 	world.SetGravity(simOptions.gravity);
-
+	/* Initialize SFML Debug Draw */
+	if(DEBUG) {
+		dbDraw = new SFMLDebugDraw(*window);
+		world.SetDebugDraw(dbDraw);
+		dbDraw->SetFlags(b2Draw::e_shapeBit); //Only draw shapes
+	}
 	loadEnviornment();
 	loadObjectList();
 }
 
 void Simulation::loadEnviornment() {
 
-	b2PolygonShape shape;
-	shape.SetAsBox((1000.f / 2) / SCALE, (100.f / 2) / SCALE);
-	b2FixtureDef groundFixtureDef;
-	groundFixtureDef.density = 0.f;
-	groundFixtureDef.friction = 0.5f;
-	groundFixtureDef.shape = &shape;
-	groundFixtureDef.restitution = 0.5f;
+	backObjOptions.b2Shape.SetAsBox((1000.f / 2) / SCALE, (100.f / 2) / SCALE);
+	backObjOptions.sfShape = Shape::square;
+	//backObjOptions.fixtDef.density = 0.f;
+	//backObjOptions.fixtDef.friction = 0.5f;
+	backObjOptions.fixtDef.shape = &backObjOptions.b2Shape;
+	//backObjOptions.fixtDef.restitution = 0.5;
 
-	b2BodyDef bodyDef;
-	bodyDef.position = b2Vec2(500.f / SCALE, 1000.f / SCALE);
-	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef));
 
-	bodyDef.position = b2Vec2(500.f / SCALE, 0.f / SCALE);
-	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef));
+	for (int i = 0; i < 10; i++) {
+		backObjOptions.bodyDef.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
+		objectList.push_back(StaticObject(world, window, backObjOptions));
+	}
 
-	shape.SetAsBox((100.f / 2) / SCALE, (1000.f / 2) / SCALE);
-	groundFixtureDef.shape = &shape;
 
-	bodyDef.position = b2Vec2(1000.f / SCALE, 500.f / SCALE);
-	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef));
 
-	bodyDef.position = b2Vec2(0.f / SCALE, 500.f / SCALE);
-	objectList.push_back(StaticObject(world, bodyDef, groundFixtureDef));
+	//// Wall 1
+	////backObjOptions.bodyDef.position = b2Vec2(500.f / SCALE, 1000.f / SCALE);
+	//backObjOptions.bodyDef.position = b2Vec2(window->getPosition().x / 2, window->getPosition().y / 2);
+	//objectList.push_back(StaticObject(world, window, backObjOptions));
+
+	//// Wall 2
+	//backObjOptions.bodyDef.position = b2Vec2(500.f / SCALE, 0.f / SCALE);
+	//objectList.push_back(StaticObject(world, window, backObjOptions));
+
+
+	//backObjOptions.b2Shape.SetAsBox((100.f / 2) / SCALE, (1000.f / 2) / SCALE);
+	//backObjOptions.fixtDef.shape = &backObjOptions.b2Shape;
+
+	//// Ceiling
+	//backObjOptions.bodyDef.position = b2Vec2(1000.f / SCALE, 500.f / SCALE);
+	//objectList.push_back(StaticObject(world, window, backObjOptions));
+
+	//// Floor
+	//backObjOptions.bodyDef.position = b2Vec2(0.f / SCALE, 500.f / SCALE);
+	//objectList.push_back(StaticObject(world, window, backObjOptions));
 }
 
 void Simulation::loadObjectList() {
 	for (int i = 0; i < foreObjOptions.quantity; i++) {
-		foreObjOptions.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
+		foreObjOptions.bodyDef.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
 		objectList.push_back(DynamicObject(world, window, foreObjOptions));
 		objectList.back().applyForce(b2Vec2(float32(rand() % 200 - 100), float32(rand() % 200 - 100)), 100);
 	}
@@ -209,7 +237,6 @@ void Simulation::displayCurrentOptions() {
 	std::cout << setw(20) << "Density:" << foreObjOptions.fixtDef.density << std::endl;
 	std::cout << setw(20) << "Restitution:" << foreObjOptions.fixtDef.restitution << std::endl;
 	std::cout << setw(20) << "Friction:" << foreObjOptions.fixtDef.friction << std::endl << std::endl;
-
 	cout << std::endl;
 }
 
@@ -262,6 +289,7 @@ void Simulation::runSimulation() {
 		for (std::vector<Object>::iterator it = objectList.begin(); it != objectList.end(); ++it) {
 			it->update();
 			it->draw(*window);
+			if(DEBUG) world.DrawDebugData();
 		}
 		window->display();
 	}

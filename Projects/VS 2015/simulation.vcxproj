@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Main.cpp" />
     <ClCompile Include="..\..\Object.cpp" />
+    <ClCompile Include="..\..\SfmlDebugDraw.cpp" />
     <ClCompile Include="..\..\Simulation.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +30,7 @@
     <ClInclude Include="..\..\Menu.h" />
     <ClInclude Include="..\..\Object.h" />
     <ClInclude Include="..\..\ResourceManager.h" />
+    <ClInclude Include="..\..\SfmlDebugDraw.h" />
     <ClInclude Include="..\..\Simulation.h" />
     <ClInclude Include="..\..\StaticObject.h" />
   </ItemGroup>

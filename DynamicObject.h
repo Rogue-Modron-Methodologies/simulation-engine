@@ -25,7 +25,7 @@ public:
 		shape->setOutlineThickness(0 - cOptions.dimension.x / 4);
 		shape->setOutlineColor(sf::Color::Black);
 		
-		cOptions.bodyDef.position = b2Vec2(cOptions.position.x, cOptions.position.y);
+		//cOptions.bodyDef.position = cOptions.position;
 		cOptions.bodyDef.type = b2_dynamicBody;
 		body = world.CreateBody(&cOptions.bodyDef);
 		body->CreateFixture(&cOptions.fixtDef);
