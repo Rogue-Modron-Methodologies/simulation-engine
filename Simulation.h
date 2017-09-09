@@ -72,6 +72,7 @@ private:
 	void randomizeOptions();
 	void loadEnviornment();
 	void loadObjectList();
+	void loadWalls(bool left = true, bool top = true, bool right = true, bool bottom = true);
 	int loadMainMenu();
 	void changeOptions(); 
 	void changeSimulationOptions(int userChoice);
