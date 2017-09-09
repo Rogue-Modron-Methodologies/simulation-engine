@@ -155,13 +155,13 @@ void Simulation::randomizeOptions() {
 	foreObjOptions.dimension.x = rand() % 50 + 10.0f;
 	foreObjOptions.dimension.y = rand() % 50 + 10.0f;
 
-	backObjOptions.quantity = rand() % 100;
+	backObjOptions.quantity = rand() % 20;
 	backObjOptions.color = Object::randColor();
 	backObjOptions.fixtDef.density = (float32)(rand() % 5 + 1);
 	backObjOptions.fixtDef.friction = (float32)((rand() % 100 + 1) / 100.0);
 	backObjOptions.fixtDef.restitution = (float32)((rand() % 100 + 1) / 100.0);
 	backObjOptions.dimension.x = rand() % 50 + 10.0f;
-	backObjOptions.dimension.y = rand() % 50 + 10.0f;
+	backObjOptions.dimension.x = rand() % 50 + 10.0f;
 }
 
 void Simulation::loadSimulation() {
@@ -180,41 +180,54 @@ void Simulation::loadSimulation() {
 
 void Simulation::loadEnviornment() {
 
+	loadWalls();
+
 	backObjOptions.b2Shape.SetAsBox((1000.f / 2) / SCALE, (100.f / 2) / SCALE);
 	backObjOptions.sfShape = Shape::square;
-	//backObjOptions.fixtDef.density = 0.f;
-	//backObjOptions.fixtDef.friction = 0.5f;
 	backObjOptions.fixtDef.shape = &backObjOptions.b2Shape;
-	//backObjOptions.fixtDef.restitution = 0.5;
 
-
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < backObjOptions.quantity; i++) {
 		backObjOptions.bodyDef.position = b2Vec2(rand() % window->getSize().x / SCALE, rand() % window->getSize().y / SCALE);
 		objectList.push_back(StaticObject(world, window, backObjOptions));
 	}
 
 
 
-	//// Wall 1
-	////backObjOptions.bodyDef.position = b2Vec2(500.f / SCALE, 1000.f / SCALE);
-	//backObjOptions.bodyDef.position = b2Vec2(window->getPosition().x / 2, window->getPosition().y / 2);
-	//objectList.push_back(StaticObject(world, window, backObjOptions));
 
-	//// Wall 2
-	//backObjOptions.bodyDef.position = b2Vec2(500.f / SCALE, 0.f / SCALE);
-	//objectList.push_back(StaticObject(world, window, backObjOptions));
+	
+}
 
+void Simulation::loadWalls(bool left, bool top, bool right, bool bottom)
+{
+	b2BodyDef groundBodyDef;
+	b2Body *groundBody;
+	b2EdgeShape groundLine;
 
-	//backObjOptions.b2Shape.SetAsBox((100.f / 2) / SCALE, (1000.f / 2) / SCALE);
-	//backObjOptions.fixtDef.shape = &backObjOptions.b2Shape;
+	if (left) {
+		groundBodyDef.position.Set(0, 0);
+		groundBody = world.CreateBody(&groundBodyDef);
+		groundLine.Set(b2Vec2(0, 0), b2Vec2(0, window->getSize().y / SCALE));
+		groundBody->CreateFixture(&groundLine, 0);
+	}
 
-	//// Ceiling
-	//backObjOptions.bodyDef.position = b2Vec2(1000.f / SCALE, 500.f / SCALE);
-	//objectList.push_back(StaticObject(world, window, backObjOptions));
-
-	//// Floor
-	//backObjOptions.bodyDef.position = b2Vec2(0.f / SCALE, 500.f / SCALE);
-	//objectList.push_back(StaticObject(world, window, backObjOptions));
+	if (right) {
+		groundBodyDef.position.Set(window->getSize().x / SCALE, 0);
+		groundBody = world.CreateBody(&groundBodyDef);
+		groundLine.Set(b2Vec2(0, 0), b2Vec2(0, window->getSize().y / SCALE));
+		groundBody->CreateFixture(&groundLine, 0);
+	}
+	if (top) {
+		groundBodyDef.position.Set(0, 0);
+		groundBody = world.CreateBody(&groundBodyDef);
+		groundLine.Set(b2Vec2(0, 0), b2Vec2(window->getSize().x / SCALE, 0));
+		groundBody->CreateFixture(&groundLine, 0);
+	}
+	if (bottom) {
+		groundBodyDef.position.Set(0, window->getSize().y / SCALE);
+		groundBody = world.CreateBody(&groundBodyDef);
+		groundLine.Set(b2Vec2(0, 0), b2Vec2(window->getSize().x / SCALE, 0));
+		groundBody->CreateFixture(&groundLine, 0);
+	}
 }
 
 void Simulation::loadObjectList() {
@@ -236,7 +249,14 @@ void Simulation::displayCurrentOptions() {
 	std::cout << setw(20) << "Color:" << foreObjOptions.color.toInteger() << std::endl;
 	std::cout << setw(20) << "Density:" << foreObjOptions.fixtDef.density << std::endl;
 	std::cout << setw(20) << "Restitution:" << foreObjOptions.fixtDef.restitution << std::endl;
-	std::cout << setw(20) << "Friction:" << foreObjOptions.fixtDef.friction << std::endl << std::endl;
+	std::cout << setw(20) << "Friction:" << foreObjOptions.fixtDef.friction << std::endl << std::endl << std::endl;
+	std::cout << setw(20) << "Background Objects:\n";
+	std::cout << setw(20) << "Quantity:" << backObjOptions.quantity << std::endl;
+	std::cout << setw(20) << "Dimensions:" << "X: " << backObjOptions.dimension.x << "  Y: " << foreObjOptions.dimension.y << std::endl;
+	std::cout << setw(20) << "Color:" << backObjOptions.color.toInteger() << std::endl;
+	std::cout << setw(20) << "Density:" << backObjOptions.fixtDef.density << std::endl;
+	std::cout << setw(20) << "Restitution:" << backObjOptions.fixtDef.restitution << std::endl;
+	std::cout << setw(20) << "Friction:" << backObjOptions.fixtDef.friction << std::endl << std::endl;
 	cout << std::endl;
 }
 
